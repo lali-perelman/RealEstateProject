@@ -1,0 +1,179 @@
+<!-- 
+<div class="form-container">
+  <h2 class="form-title">Create New Apartment</h2>
+
+  <form [formGroup]="apartmentForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" type="text" formControlName="Title" />
+
+      <small *ngIf="(f['Title'].touched || isSubmitted) && f['Title'].errors?.['required']">
+        Title is required
+      </small>
+      <small *ngIf="(f['Title'].touched || isSubmitted) && f['Title'].errors?.['minlength']">
+        Title must contain at least 3 characters
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" formControlName="Description"></textarea>
+
+      <small *ngIf="(f['Description'].touched || isSubmitted) && f['Description'].errors?.['required']">
+        Description is required
+      </small>
+      <small *ngIf="(f['Description'].touched || isSubmitted) && f['Description'].errors?.['minlength']">
+        Description must contain at least 10 characters
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input id="price" type="number" formControlName="Price" />
+
+      <small *ngIf="(f['Price'].touched || isSubmitted) && f['Price'].errors?.['required']">
+        Price is required
+      </small>
+      <small *ngIf="(f['Price'].touched || isSubmitted) && f['Price'].errors?.['min']">
+        Price must be greater than 0
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="statusId">Status</label>
+      <select id="statusId" formControlName="StatusId">
+        <option [ngValue]="null">Select status</option>
+        <option *ngFor="let status of statuses" [ngValue]="status.Id">
+          {{ status.Name }}
+        </option>
+      </select>
+
+      <small *ngIf="(f['StatusId'].touched || isSubmitted) && f['StatusId'].errors?.['required']">
+        Status is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="agentId">Agent</label>
+      <select id="agentId" formControlName="AgentId">
+        <option [ngValue]="null">Select agent</option>
+        <option *ngFor="let agent of agents" [ngValue]="agent.Id">
+          {{ agent.FullName }}
+        </option>
+      </select>
+
+      <small *ngIf="(f['AgentId'].touched || isSubmitted) && f['AgentId'].errors?.['required']">
+        Agent is required
+      </small>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="buttons">
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Saving...' : 'Save Apartment' }}
+      </button>
+
+      <button type="button" class="secondary-btn" (click)="resetForm()">
+        Clear
+      </button>
+
+      <button type="button" class="secondary-btn" (click)="goBack()">
+        Back to List
+      </button>
+    </div>
+  </form>
+</div> -->
+
+<div class="form-container">
+  <h2 class="form-title">
+    {{ isEditMode ? 'Edit Apartment' : 'Create New Apartment' }}
+  </h2>
+
+  <form [formGroup]="apartmentForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input id="title" type="text" formControlName="Title" />
+
+      <small *ngIf="(f['Title'].touched || isSubmitted) && f['Title'].errors?.['required']">
+        Title is required
+      </small>
+      <small *ngIf="(f['Title'].touched || isSubmitted) && f['Title'].errors?.['minlength']">
+        Title must contain at least 3 characters
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" rows="4" formControlName="Description"></textarea>
+
+      <small *ngIf="(f['Description'].touched || isSubmitted) && f['Description'].errors?.['required']">
+        Description is required
+      </small>
+      <small *ngIf="(f['Description'].touched || isSubmitted) && f['Description'].errors?.['minlength']">
+        Description must contain at least 10 characters
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input id="price" type="number" formControlName="Price" />
+
+      <small *ngIf="(f['Price'].touched || isSubmitted) && f['Price'].errors?.['required']">
+        Price is required
+      </small>
+      <small *ngIf="(f['Price'].touched || isSubmitted) && f['Price'].errors?.['min']">
+        Price must be greater than 0
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="statusId">Status</label>
+      <select id="statusId" formControlName="StatusId">
+        <option [ngValue]="null">Select status</option>
+        <option *ngFor="let status of statuses" [ngValue]="status.Id">
+          {{ status.Name }}
+        </option>
+      </select>
+
+      <small *ngIf="(f['StatusId'].touched || isSubmitted) && f['StatusId'].errors?.['required']">
+        Status is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="agentId">Agent</label>
+      <select id="agentId" formControlName="AgentId">
+        <option [ngValue]="null">Select agent</option>
+        <option *ngFor="let agent of agents" [ngValue]="agent.Id">
+          {{ agent.FullName }}
+        </option>
+      </select>
+
+      <small *ngIf="(f['AgentId'].touched || isSubmitted) && f['AgentId'].errors?.['required']">
+        Agent is required
+      </small>
+    </div>
+
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <div class="buttons">
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Apartment' : 'Save Apartment') }}
+      </button>
+
+      <button type="button" class="secondary-btn" (click)="resetForm()">
+        {{ isEditMode ? 'Reset Changes' : 'Clear' }}
+      </button>
+
+      <button type="button" class="secondary-btn" (click)="goBack()">
+        Back to List
+      </button>
+    </div>
+  </form>
+</div>

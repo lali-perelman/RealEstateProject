@@ -1,0 +1,260 @@
+-- =====================================
+-- CREATE DATABASE
+-- =====================================
+IF DB_ID('RealEstateDB') IS NOT NULL
+    DROP DATABASE RealEstateDB;
+GO
+
+CREATE DATABASE RealEstateDB;
+GO
+
+USE RealEstateDB;
+GO
+
+-- =====================================
+-- TABLES
+-- =====================================
+
+CREATE TABLE Statuses (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE Agents (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    FullName NVARCHAR(150) NOT NULL,
+    Phone NVARCHAR(20),
+    Email NVARCHAR(150) UNIQUE
+);
+
+CREATE TABLE Apartments (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Title NVARCHAR(200) NOT NULL,
+    Description NVARCHAR(MAX),
+    Price DECIMAL(18,2) NOT NULL,
+    StatusId INT NOT NULL,
+    AgentId INT NOT NULL,
+    CreatedAt DATETIME NOT NULL DEFAULT GETDATE(),
+
+    CONSTRAINT FK_Apartments_Status
+        FOREIGN KEY (StatusId) REFERENCES Statuses(Id),
+
+    CONSTRAINT FK_Apartments_Agent
+        FOREIGN KEY (AgentId) REFERENCES Agents(Id)
+);
+
+-- =====================================
+-- INDEXES
+-- =====================================
+CREATE INDEX IX_Apartments_StatusId ON Apartments(StatusId);
+CREATE INDEX IX_Apartments_AgentId ON Apartments(AgentId);
+
+-- =====================================
+-- INITIAL DATA
+-- =====================================
+
+INSERT INTO Statuses (Name) VALUES 
+('Available'),
+('Sold'),
+('Under Contract');
+
+INSERT INTO Agents (FullName, Phone, Email) VALUES
+('Sarah Cohen', '0501234567', 'sarah@gmail.com'),
+('Rivka Levi', '0529876543', 'rivka@gmail.com'),
+('Leah Mizrahi', '0541234567', 'leah@gmail.com');
+
+INSERT INTO Apartments (Title, Description, Price, StatusId, AgentId) VALUES
+('4 Rooms in Tel Aviv', 'Spacious apartment near the beach', 1250000, 1, 1),
+('3 Rooms in Haifa', 'Sea view apartment', 980000, 1, 2),
+('Penthouse in Jerusalem', 'Luxury with big terrace', 2500000, 3, 3);
+
+-- =====================================
+-- STORED PROCEDURES
+-- =====================================
+
+-- ===== Apartments =====
+
+CREATE OR ALTER PROCEDURE Apartments_Create
+    @Title NVARCHAR(200),
+    @Description NVARCHAR(MAX),
+    @Price DECIMAL(18,2),
+    @StatusId INT,
+    @AgentId INT
+AS
+BEGIN
+    INSERT INTO Apartments (Title, Description, Price, StatusId, AgentId)
+    VALUES (@Title, @Description, @Price, @StatusId, @AgentId);
+
+    SELECT SCOPE_IDENTITY() AS NewId;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Apartments_GetById
+    @Id INT
+AS
+BEGIN
+    SELECT 
+        A.Id,
+        A.Title,
+        A.Description,
+        A.Price,
+        A.CreatedAt,
+        A.StatusId,
+        S.Name AS StatusName,
+        A.AgentId,
+        AG.FullName AS AgentName
+    FROM Apartments A
+    JOIN Statuses S ON A.StatusId = S.Id
+    JOIN Agents AG ON A.AgentId = AG.Id
+    WHERE A.Id = @Id;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Apartments_GetAll
+    @Search NVARCHAR(200) = NULL
+AS
+BEGIN
+    SELECT 
+        A.Id,
+        A.Title,
+        A.Description,
+        A.Price,
+        S.Name AS StatusName,
+        AG.FullName AS AgentName
+    FROM Apartments A
+    JOIN Statuses S ON A.StatusId = S.Id
+    JOIN Agents AG ON A.AgentId = AG.Id
+    WHERE @Search IS NULL
+       OR A.Title LIKE '%' + @Search + '%'
+    ORDER BY A.CreatedAt DESC;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Apartments_Update
+    @Id INT,
+    @Title NVARCHAR(200),
+    @Description NVARCHAR(MAX),
+    @Price DECIMAL(18,2),
+    @StatusId INT,
+    @AgentId INT
+AS
+BEGIN
+    UPDATE Apartments
+    SET 
+        Title = @Title,
+        Description = @Description,
+        Price = @Price,
+        StatusId = @StatusId,
+        AgentId = @AgentId
+    WHERE Id = @Id;
+
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Apartments_ChangeStatus
+    @Id INT,
+    @StatusId INT
+AS
+BEGIN
+    UPDATE Apartments
+    SET StatusId = @StatusId
+    WHERE Id = @Id;
+
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Apartments_Delete
+    @Id INT
+AS
+BEGIN
+    DELETE FROM Apartments
+    WHERE Id = @Id;
+
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- ===== Agents =====
+
+CREATE OR ALTER PROCEDURE Agents_Create
+    @FullName NVARCHAR(150),
+    @Phone NVARCHAR(20),
+    @Email NVARCHAR(150)
+AS
+BEGIN
+    INSERT INTO Agents (FullName, Phone, Email)
+    VALUES (@FullName, @Phone, @Email);
+
+    SELECT SCOPE_IDENTITY() AS NewId;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Agents_GetAll
+AS
+BEGIN
+    SELECT Id, FullName, Phone, Email
+    FROM Agents
+    ORDER BY FullName;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Agents_GetById
+    @Id INT
+AS
+BEGIN
+    SELECT Id, FullName, Phone, Email
+    FROM Agents
+    WHERE Id = @Id;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Agents_Update
+    @Id INT,
+    @FullName NVARCHAR(150),
+    @Phone NVARCHAR(20),
+    @Email NVARCHAR(150)
+AS
+BEGIN
+    UPDATE Agents
+    SET 
+        FullName = @FullName,
+        Phone = @Phone,
+        Email = @Email
+    WHERE Id = @Id;
+
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+CREATE OR ALTER PROCEDURE Agents_Delete
+    @Id INT
+AS
+BEGIN
+    DELETE FROM Agents
+    WHERE Id = @Id;
+
+    SELECT @@ROWCOUNT AS RowsAffected;
+END
+GO
+
+-- ===== Statuses =====
+
+CREATE OR ALTER PROCEDURE Statuses_GetAll
+AS
+BEGIN
+    SELECT Id, Name
+    FROM Statuses
+    ORDER BY Name;
+END
+GO
+
+-- =====================================
+-- TEST CALLS
+-- =====================================
+
+EXEC Apartments_GetAll;
+EXEC Apartments_GetById @Id = 1;
+EXEC Agents_GetAll;
+EXEC Statuses_GetAll;

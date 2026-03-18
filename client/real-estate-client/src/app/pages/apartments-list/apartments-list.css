@@ -1,0 +1,130 @@
+
+.apartments-page-title {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 28px;
+  color: #222;
+}
+
+.debug-line {
+  margin: 6px 20px;
+  font-size: 14px;
+  color: #333;
+}
+
+.apartments-search-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 20px;
+  flex-wrap: wrap;
+}
+
+.apartments-search-input {
+  min-width: 260px;
+  padding: 10px 12px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #222;
+}
+
+.apartments-search-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #1976d2;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.apartments-search-button:hover {
+  background-color: #125ea8;
+}
+
+.apartments-list-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.apartments-card {
+  display: block;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 18px;
+  background-color: #ffffff;
+  color: #222;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.apartments-card-title {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.apartments-card-title:hover {
+  text-decoration: underline;
+}
+
+.apartments-card-description {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.apartments-card-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.apartments-card-price {
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.apartments-card-status {
+  font-size: 14px;
+  color: #444;
+}
+
+.apartments-card-agent {
+  font-size: 13px;
+  color: #666;
+}
+
+.apartments-empty-message {
+  margin: 20px;
+  font-size: 16px;
+  color: #777;
+}
+.apartments-top-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 20px 10px 20px;
+}
+
+.add-apartment-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2e7d32; /* ירוק כמו המחיר */
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.add-apartment-button:hover {
+  background-color: #1f5a22;
+}

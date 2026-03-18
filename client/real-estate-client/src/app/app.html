@@ -1,0 +1,23 @@
+<header class="app-header">
+  <div class="header-content">
+    <div class="logo">🏠 RealEstate</div>
+
+    <nav class="nav-links">
+      <a routerLink="/apartments" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        apartments
+      </a>
+
+      <a routerLink="/create-apartment" routerLinkActive="active">
+       New apartment
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="app-main">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="app-footer">
+  <p>© 2026 RealEstate</p>
+</footer>

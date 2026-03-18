@@ -1,0 +1,42 @@
+
+<h2 class="apartments-page-title">Apartments</h2>
+
+
+<div class="apartments-search-container">
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    (keyup.enter)="onSearch()"
+    placeholder=" Search by title" 
+    class="apartments-search-input"
+  />
+
+  <button class="apartments-search-button" (click)="onSearch()">
+    Search
+  </button>
+</div>
+
+<div class="apartments-list-container" *ngIf="apartments.length > 0; else noApartments">
+  <div class="apartments-card" *ngFor="let a of apartments">
+    <h3 class="apartments-card-title" (click)="goToDetails(a.Id)">
+      {{ a.Title }}
+    </h3>
+
+    <p class="apartments-card-description">
+      {{ a.Description }}
+    </p>
+
+    <div class="apartments-card-info">
+      <span class="apartments-card-price">💰 {{ a.Price }} ₪</span>
+      <span class="apartments-card-status">Status: {{ a.StatusName }}</span>
+    </div>
+
+    <div class="apartments-card-agent">
+      Agent: {{ a.AgentName }}
+    </div>
+  </div>
+</div>
+
+<ng-template #noApartments>
+  <p class="apartments-empty-message">No apartments found for display</p>
+</ng-template>

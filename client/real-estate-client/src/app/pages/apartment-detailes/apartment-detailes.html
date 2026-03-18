@@ -1,0 +1,43 @@
+
+<div class="details-page" *ngIf="apartment as a; else loadingTemplate">
+  <div class="details-card">
+    <div class="top-actions">
+      <button class="back-btn" (click)="goBack()">← Back to the list of apartments</button>
+      <button class="edit-btn" (click)="goToEdit(a.Id)">✏️ Edit Apartment</button>
+    </div>
+
+    <h1 class="title">{{ a.Title }}</h1>
+
+    <p class="description">
+      {{ a.Description }}
+    </p>
+
+    <div class="details-grid">
+      <div class="detail-box">
+        <span class="label">Price</span>
+        <span class="value price">₪ {{ a.Price }}</span>
+      </div>
+
+      <div class="detail-box">
+        <span class="label">Status</span>
+        <span class="value">{{ a.StatusName }}</span>
+      </div>
+
+      <div class="detail-box">
+        <span class="label">Agent</span>
+        <span class="value">{{ a.AgentName }}</span>
+      </div>
+
+      <div class="detail-box" *ngIf="a.CreatedAt">
+        <span class="label">Created at</span>
+        <span class="value">{{ a.CreatedAt | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="loading">
+    טוען פרטי דירה...
+  </div>
+</ng-template>
